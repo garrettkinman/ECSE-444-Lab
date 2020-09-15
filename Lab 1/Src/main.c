@@ -88,8 +88,10 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
   // define our variables and array
-  float max = 0;
-  uint32_t maxIndex;
+  float maxC = 0;
+  float maxAsm = 0;
+  uint32_t maxIndexC;
+  uint32_t maxIndexAsm;
   // the max is 88.49 at index 5
   float array[10] = {48.21, 79.48, 24.27, 28.82, 78.24, 88.49, 31.19, 5.52, 82.70, 77.73};
   /* USER CODE END 2 */
@@ -103,8 +105,10 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	ITM_Port32(31) = 1;
 	for (uint32_t i = 0; i < 1000; i++)
-		cMax(&array, 10, &max, &maxIndex);
+		cMax(&array, 10, &maxC, &maxIndexC);
 	ITM_Port32(31) = 2;
+	for (uint32_t i = 0; i < 1000; i++)
+		asmMax(&array, 10, &maxAsm, &maxIndexAsm);
   }
   /* USER CODE END 3 */
 }
