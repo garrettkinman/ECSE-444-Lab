@@ -47,7 +47,7 @@ all: Lab\ 1.elf secondary-outputs
 
 # Tool invocations
 Lab\ 1.elf: $(OBJS) $(USER_OBJS) C:\Users\Wombat\Documents\GitHub\ECSE-444-Lab\Lab\ 1\STM32L475VGTX_FLASH.ld
-	arm-none-eabi-gcc -o "Lab 1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Wombat\Documents\GitHub\ECSE-444-Lab\Lab 1\STM32L475VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Lab 1.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "Lab 1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Wombat\Documents\GitHub\ECSE-444-Lab\Lab 1\STM32L475VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Lab 1.map" -Wl,--gc-sections -static -L"C:\Users\Wombat\Documents\GitHub\ECSE-444-Lab\Lab 1\Lib" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

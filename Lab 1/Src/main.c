@@ -22,6 +22,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#define ARM_MATH_CM4
+#include "arm_math.h"
+
 #include "lab1math.h"
 /* USER CODE END Includes */
 
@@ -90,8 +93,10 @@ int main(void)
   // define our variables and array
   float maxC = 0;
   float maxAsm = 0;
+  float maxCMSIS = 0;
   uint32_t maxIndexC;
   uint32_t maxIndexAsm;
+  uint32_t maxIndexCMSIS;
   // the max is 88.49 at index 5
   float array[10] = {48.21, 79.48, 24.27, 28.82, 78.24, 88.49, 31.19, 5.52, 82.70, 77.73};
   /* USER CODE END 2 */
@@ -109,6 +114,9 @@ int main(void)
 	ITM_Port32(31) = 2;
 	for (uint32_t i = 0; i < 1000; i++)
 		asmMax(&array, 10, &maxAsm, &maxIndexAsm);
+	ITM_Port32(31) = 3;
+	for (uint32_t i = 0; i < 1000; i++)
+		arm_max_f32(&array, 10, &maxCMSIS, &maxIndexCMSIS);
   }
   /* USER CODE END 3 */
 }
