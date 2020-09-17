@@ -3896,6 +3896,7 @@ int main(void)
  8001b64:	4b73      	ldr	r3, [pc, #460]	; (8001d34 <main+0x21c>)
  8001b66:	2201      	movs	r2, #1
  8001b68:	601a      	str	r2, [r3, #0]
+	// cMult is about 35,000 cycles per call
 	for (uint32_t i = 0; i < 1000; i++)
  8001b6a:	2300      	movs	r3, #0
  8001b6c:	f507 52fb 	add.w	r2, r7, #8032	; 0x1f60
@@ -3926,6 +3927,7 @@ int main(void)
  8001bb4:	4b5f      	ldr	r3, [pc, #380]	; (8001d34 <main+0x21c>)
  8001bb6:	2202      	movs	r2, #2
  8001bb8:	601a      	str	r2, [r3, #0]
+	//asmMult is about 14,000 cycles per call
 	for (uint32_t i = 0; i < 1000; i++)
  8001bba:	2300      	movs	r3, #0
  8001bbc:	f507 52fb 	add.w	r2, r7, #8032	; 0x1f60
@@ -3952,6 +3954,7 @@ int main(void)
  8001bf4:	4b4f      	ldr	r3, [pc, #316]	; (8001d34 <main+0x21c>)
  8001bf6:	2203      	movs	r2, #3
  8001bf8:	601a      	str	r2, [r3, #0]
+	// arm_mult_f32 is about 7,000 cycles per call
 	for (uint32_t i = 0; i < 1000; i++)
  8001bfa:	2300      	movs	r3, #0
  8001bfc:	f507 52fa 	add.w	r2, r7, #8000	; 0x1f40
@@ -3982,6 +3985,7 @@ int main(void)
  8001c44:	4b3b      	ldr	r3, [pc, #236]	; (8001d34 <main+0x21c>)
  8001c46:	2204      	movs	r2, #4
  8001c48:	601a      	str	r2, [r3, #0]
+	// cStd is about 83,000 cycles per call
 	for (uint32_t i = 0; i < 1000; i++)
  8001c4a:	2300      	movs	r3, #0
  8001c4c:	f507 52fa 	add.w	r2, r7, #8000	; 0x1f40
@@ -4012,6 +4016,7 @@ int main(void)
  8001c92:	4b28      	ldr	r3, [pc, #160]	; (8001d34 <main+0x21c>)
  8001c94:	2205      	movs	r2, #5
  8001c96:	601a      	str	r2, [r3, #0]
+	// asmStd is about 37,000 cycles per call
 	for (uint32_t i = 0; i < 1000; i++)
  8001c98:	2300      	movs	r3, #0
  8001c9a:	f507 52fa 	add.w	r2, r7, #8000	; 0x1f40
@@ -4041,6 +4046,7 @@ int main(void)
  8001cde:	4b15      	ldr	r3, [pc, #84]	; (8001d34 <main+0x21c>)
  8001ce0:	2206      	movs	r2, #6
  8001ce2:	601a      	str	r2, [r3, #0]
+	// arm_std_f32 is about 6,600 cycles per call
 	for (uint32_t i = 0; i < 1000; i++)
  8001ce4:	2300      	movs	r3, #0
  8001ce6:	f507 52fa 	add.w	r2, r7, #8000	; 0x1f40
