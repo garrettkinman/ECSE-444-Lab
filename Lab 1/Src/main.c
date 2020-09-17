@@ -138,6 +138,9 @@ int main(void)
 	ITM_Port32(31) = 2;
 	for (uint32_t i = 0; i < 1000; i++)
 		asmMult(f1000_array, f1000_array, 1000, products);
+	ITM_Port32(31) = 3;
+	for (uint32_t i = 0; i < 1000; i++)
+		arm_mult_f32(f1000_array, f1000_array, products, 1000);
   }
   /* USER CODE END 3 */
 }
