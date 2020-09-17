@@ -26,7 +26,7 @@
  */
 
 asmMult:
-	PUSH		{R4, R5}			// saving R4-R9 according to calling convention
+	PUSH		{R4, R5}			// saving R4 and R5 according to calling convention
 
 loop:
 	SUBS		R2, R2, #1			// size = size - 1
