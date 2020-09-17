@@ -1,4 +1,4 @@
-main.c:68:5:main	8040	static
-main.c:165:6:SystemClock_Config	96	static
-main.c:214:13:MX_GPIO_Init	16	static
-main.c:231:6:Error_Handler	4	static
+main.c:68:5:main	8048	static
+main.c:142:6:SystemClock_Config	96	static
+main.c:191:13:MX_GPIO_Init	16	static
+main.c:208:6:Error_Handler	4	static
