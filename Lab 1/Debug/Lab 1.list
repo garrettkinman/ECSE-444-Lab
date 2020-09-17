@@ -2814,7 +2814,6 @@ asmMult:
 
 080010aa <loop>:
 
-
 loop:
 	SUBS		R2, R2, #1			// size = size - 1
  80010aa:	3a01      	subs	r2, #1

@@ -28,7 +28,6 @@
 asmMult:
 	PUSH		{R4, R5}			// saving R4-R9 according to calling convention
 
-
 loop:
 	SUBS		R2, R2, #1			// size = size - 1
 	BLT			done				// loop finishes when R1 < 0
