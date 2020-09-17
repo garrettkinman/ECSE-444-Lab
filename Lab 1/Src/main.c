@@ -114,21 +114,27 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	ITM_Port32(31) = 1;
+	// cMult is about 35,000 cycles per call
 	for (uint32_t i = 0; i < 1000; i++)
 		cMult(f1000_array, f1000_array, 1000, products);
 	ITM_Port32(31) = 2;
+	//asmMult is about 14,000 cycles per call
 	for (uint32_t i = 0; i < 1000; i++)
 		asmMult(f1000_array, f1000_array, 1000, products);
 	ITM_Port32(31) = 3;
+	// arm_mult_f32 is about 7,000 cycles per call
 	for (uint32_t i = 0; i < 1000; i++)
 		arm_mult_f32(f1000_array, f1000_array, products, 1000);
 	ITM_Port32(31) = 4;
+	// cStd is about 83,000 cycles per call
 	for (uint32_t i = 0; i < 1000; i++)
 		cStd(f1000_array, 1000, &stdC);
 	ITM_Port32(31) = 5;
+	// asmStd is about 37,000 cycles per call
 	for (uint32_t i = 0; i < 1000; i++)
 		asmStd(f1000_array, 1000, &stdAsm);
 	ITM_Port32(31) = 6;
+	// arm_std_f32 is about 6,600 cycles per call
 	for (uint32_t i = 0; i < 1000; i++)
 		arm_std_f32(f1000_array, 1000, &stdCMSIS);
   }
