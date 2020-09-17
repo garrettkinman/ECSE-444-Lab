@@ -18,4 +18,8 @@ void cMult(float *array1, float *array2, uint32_t size, float *products);
 
 extern void asmMult(float *array1, float *array2, uint32_t size, float *products);
 
+void cStd(float *array, uint32_t size, float *std);
+
+extern void asmStd(float *array, uint32_t size, float *std);
+
 #endif /* INC_LAB1MATH_H_ */
