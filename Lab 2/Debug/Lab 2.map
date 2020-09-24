@@ -3356,7 +3356,7 @@ OUTPUT(Lab 2.elf elf32-littlearm)
  .debug_line    0x0000000000004e9e      0x6e1 Src/system_stm32l4xx.o
  .debug_line    0x000000000000557f       0x82 Startup/startup_stm32l475vgtx.o
 
-.debug_str      0x0000000000000000    0xdfffc
+.debug_str      0x0000000000000000    0xdfffe
  .debug_str     0x0000000000000000    0xde78c Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
                                       0xdebd1 (size before relaxing)
  .debug_str     0x00000000000de78c      0x3dd Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
@@ -3369,15 +3369,15 @@ OUTPUT(Lab 2.elf elf32-littlearm)
                                       0xde611 (size before relaxing)
  .debug_str     0x00000000000df8a3      0x52d Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
                                       0xde6b8 (size before relaxing)
- .debug_str     0x00000000000dfdd0       0xd8 Src/main.o
-                                      0xde6cf (size before relaxing)
- .debug_str     0x00000000000dfea8       0x1b Src/stm32l4xx_hal_msp.o
+ .debug_str     0x00000000000dfdd0       0xda Src/main.o
+                                      0xde6d1 (size before relaxing)
+ .debug_str     0x00000000000dfeaa       0x1b Src/stm32l4xx_hal_msp.o
                                       0xde41e (size before relaxing)
- .debug_str     0x00000000000dfec3       0xb8 Src/stm32l4xx_it.o
+ .debug_str     0x00000000000dfec5       0xb8 Src/stm32l4xx_it.o
                                       0xddff2 (size before relaxing)
- .debug_str     0x00000000000dff7b       0x50 Src/system_stm32l4xx.o
+ .debug_str     0x00000000000dff7d       0x50 Src/system_stm32l4xx.o
                                       0xde0f1 (size before relaxing)
- .debug_str     0x00000000000dffcb       0x31 Startup/startup_stm32l475vgtx.o
+ .debug_str     0x00000000000dffcd       0x31 Startup/startup_stm32l475vgtx.o
                                          0x6b (size before relaxing)
 
 .comment        0x0000000000000000       0x7b

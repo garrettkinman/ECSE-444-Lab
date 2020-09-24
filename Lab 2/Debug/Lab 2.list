@@ -39,9 +39,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  17 .debug_line   00005601  00000000  00000000  0004ceb2  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    000dfffc  00000000  00000000  000524b3  2**0
+ 18 .debug_str    000dfffe  00000000  00000000  000524b3  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  001324af  2**0
+ 19 .comment      0000007b  00000000  00000000  001324b1  2**0
                   CONTENTS, READONLY
  20 .debug_frame  000017d8  00000000  00000000  0013252c  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -4149,7 +4149,7 @@ int main(void)
 
   // initialize arrays to hold one period of the wave signal values
   uint32_t triangleWave[16];
-  uint32_t squareWave[16];
+  uint32_t sawtoothWave[16];
   uint32_t i = 0;
  800181e:	2300      	movs	r3, #0
  8001820:	f8c7 308c 	str.w	r3, [r7, #140]	; 0x8c
@@ -4198,7 +4198,7 @@ int main(void)
  8001882:	f107 0190 	add.w	r1, r7, #144	; 0x90
  8001886:	440b      	add	r3, r1
  8001888:	f843 2c4c 	str.w	r2, [r3, #-76]
-	  squareWave[j] = j * 16;
+	  sawtoothWave[j] = j * 16;
  800188c:	f8d7 3088 	ldr.w	r3, [r7, #136]	; 0x88
  8001890:	011a      	lsls	r2, r3, #4
  8001892:	f8d7 3088 	ldr.w	r3, [r7, #136]	; 0x88
@@ -4228,7 +4228,7 @@ int main(void)
  80018c6:	2100      	movs	r1, #0
  80018c8:	4819      	ldr	r0, [pc, #100]	; (8001930 <main+0x138>)
  80018ca:	f7fe fe67 	bl	800059c <HAL_DAC_SetValue>
-	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_8B_R, squareWave[i]);
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_8B_R, sawtoothWave[i]);
  80018ce:	f8d7 308c 	ldr.w	r3, [r7, #140]	; 0x8c
  80018d2:	009b      	lsls	r3, r3, #2
  80018d4:	f107 0290 	add.w	r2, r7, #144	; 0x90
