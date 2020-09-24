@@ -83,6 +83,8 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
 
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -90,6 +92,21 @@ int main(void)
   MX_DAC1_Init();
   /* USER CODE BEGIN 2 */
 
+  // initialize arrays to hold one period of the wave signal values
+  uint32_t triangleWave[16];
+  uint32_t squareWave[16];
+  uint32_t i = 0;
+
+  for (uint32_t j = 0; j < 16; j++) {
+	  if (j < 8)
+		  triangleWave[j] = j * 32;
+	  else if (j == 8)
+		  // normally would be 256, but want it to be 8 bit
+		  triangleWave[j] = 255;
+	  else
+		  triangleWave[j] = 256 - ((j % 8) * 32);
+	  squareWave[j] = j * 16;
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -99,12 +116,19 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	// set the DAC values, then update index
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_8B_R, triangleWave[i]);
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_8B_R, squareWave[i]);
+	i = (i + 1) % 16;
 	// GPIO_PIN_RESET means the button is currently pressed
 	GPIO_PinState buttonState = HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin);
 	if (buttonState == GPIO_PIN_RESET)
 		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 	else
 		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+
+	// delay
+	HAL_Delay(1);
   }
   /* USER CODE END 3 */
 }
