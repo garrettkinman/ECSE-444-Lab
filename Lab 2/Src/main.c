@@ -108,9 +108,6 @@ int main(void)
   // used for indexing into the waves
   uint32_t i = 0;
 
-  // for use in sine wave calculations
-  const float pi = 3.14;
-
   for (uint32_t j = 0; j < 16; j++) {
 	  if (j < 8)
 		  triangleWave[j] = j * 512;
@@ -120,7 +117,7 @@ int main(void)
 	  else
 		  triangleWave[j] = 4096 - ((j % 8) * 512);
 
-	  float radians = pi * j / 8.0;
+	  float radians = 3.14 * j / 8.0;
 	  sineWave[j] = (uint32_t) roundf(2047.0 * (1.0 + arm_sin_f32(radians)));
 
 	  sawtoothWave[j] = j * 256;
@@ -138,9 +135,9 @@ int main(void)
 	triangle = triangleWave[i];
 	sawtooth = sawtoothWave[i];
 	sine = sineWave[i];
-	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, triangle);
+	// HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, triangle);
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine);
 	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, sawtooth);
-	// HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine);
 	i = (i + 1) % 16;
 	// GPIO_PIN_RESET means the button is currently pressed
 	GPIO_PinState buttonState = HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin);
