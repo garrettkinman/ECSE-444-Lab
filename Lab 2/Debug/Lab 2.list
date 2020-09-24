@@ -4971,13 +4971,13 @@ int main(void)
  80021c0:	4413      	add	r3, r2
  80021c2:	f853 3cdc 	ldr.w	r3, [r3, #-220]
  80021c6:	f8c7 30cc 	str.w	r3, [r7, #204]	; 0xcc
-	// HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, triangle);
-	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine);
- 80021ca:	f8d7 30cc 	ldr.w	r3, [r7, #204]	; 0xcc
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, triangle);
+ 80021ca:	f8d7 30d4 	ldr.w	r3, [r7, #212]	; 0xd4
  80021ce:	2200      	movs	r2, #0
  80021d0:	2100      	movs	r1, #0
  80021d2:	481b      	ldr	r0, [pc, #108]	; (8002240 <main+0x208>)
  80021d4:	f7fe fe00 	bl	8000dd8 <HAL_DAC_SetValue>
+	// HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine);
 	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, sawtooth);
  80021d8:	f8d7 30d0 	ldr.w	r3, [r7, #208]	; 0xd0
  80021dc:	2200      	movs	r2, #0
