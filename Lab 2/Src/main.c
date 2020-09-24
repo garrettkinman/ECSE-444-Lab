@@ -22,7 +22,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#define ARM_MATH_CM4
+#include "arm_math.h"
 
+#include <math.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -95,9 +98,18 @@ int main(void)
   // initialize arrays to hold one period of the wave signal values
   uint32_t triangleWave[16];
   uint32_t sawtoothWave[16];
+  uint32_t sineWave[16];
+
+  // initialize variables to allow graphing SWV
   uint32_t triangle;
   uint32_t sawtooth;
+  uint32_t sine;
+
+  // used for indexing into the waves
   uint32_t i = 0;
+
+  // for use in sine wave calculations
+  const float pi = 3.14;
 
   for (uint32_t j = 0; j < 16; j++) {
 	  if (j < 8)
@@ -107,6 +119,10 @@ int main(void)
 		  triangleWave[j] = 4095;
 	  else
 		  triangleWave[j] = 4096 - ((j % 8) * 512);
+
+	  float radians = pi * j / 8.0;
+	  sineWave[j] = (uint32_t) roundf(2047.0 * (1.0 + arm_sin_f32(radians)));
+
 	  sawtoothWave[j] = j * 256;
   }
   /* USER CODE END 2 */
@@ -121,8 +137,10 @@ int main(void)
 	// set the DAC values, then update index
 	triangle = triangleWave[i];
 	sawtooth = sawtoothWave[i];
+	sine = sineWave[i];
 	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, triangle);
 	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, sawtooth);
+	// HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine);
 	i = (i + 1) % 16;
 	// GPIO_PIN_RESET means the button is currently pressed
 	GPIO_PinState buttonState = HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin);
