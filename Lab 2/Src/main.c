@@ -95,6 +95,8 @@ int main(void)
   // initialize arrays to hold one period of the wave signal values
   uint32_t triangleWave[16];
   uint32_t sawtoothWave[16];
+  uint32_t triangle;
+  uint32_t sawtooth;
   uint32_t i = 0;
 
   for (uint32_t j = 0; j < 16; j++) {
@@ -117,8 +119,10 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	// set the DAC values, then update index
-	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_8B_R, triangleWave[i]);
-	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_8B_R, sawtoothWave[i]);
+	triangle = triangleWave[i];
+	sawtooth = sawtoothWave[i];
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_8B_R, triangle);
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_8B_R, sawtooth);
 	i = (i + 1) % 16;
 	// GPIO_PIN_RESET means the button is currently pressed
 	GPIO_PinState buttonState = HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin);
