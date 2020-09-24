@@ -101,13 +101,13 @@ int main(void)
 
   for (uint32_t j = 0; j < 16; j++) {
 	  if (j < 8)
-		  triangleWave[j] = j * 32;
+		  triangleWave[j] = j * 512;
 	  else if (j == 8)
 		  // normally would be 256, but want it to be 8 bit
-		  triangleWave[j] = 255;
+		  triangleWave[j] = 4095;
 	  else
-		  triangleWave[j] = 256 - ((j % 8) * 32);
-	  sawtoothWave[j] = j * 16;
+		  triangleWave[j] = 4096 - ((j % 8) * 512);
+	  sawtoothWave[j] = j * 256;
   }
   /* USER CODE END 2 */
 
@@ -121,8 +121,8 @@ int main(void)
 	// set the DAC values, then update index
 	triangle = triangleWave[i];
 	sawtooth = sawtoothWave[i];
-	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_8B_R, triangle);
-	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_8B_R, sawtooth);
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, triangle);
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, sawtooth);
 	i = (i + 1) % 16;
 	// GPIO_PIN_RESET means the button is currently pressed
 	GPIO_PinState buttonState = HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin);
