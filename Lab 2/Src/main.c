@@ -86,14 +86,15 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
 
-  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
-  HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DAC1_Init();
   /* USER CODE BEGIN 2 */
+
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
 
   // initialize arrays to hold one period of the wave signal values
   uint32_t triangleWave[16];

@@ -4805,24 +4805,25 @@ int main(void)
   /* Configure the system clock */
   SystemClock_Config();
  8002042:	f000 f907 	bl	8002254 <SystemClock_Config>
-
   /* USER CODE BEGIN SysInit */
 
-  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
- 8002046:	2100      	movs	r1, #0
- 8002048:	487d      	ldr	r0, [pc, #500]	; (8002240 <main+0x208>)
- 800204a:	f7fe fe78 	bl	8000d3e <HAL_DAC_Start>
-  HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
- 800204e:	2110      	movs	r1, #16
- 8002050:	487b      	ldr	r0, [pc, #492]	; (8002240 <main+0x208>)
- 8002052:	f7fe fe74 	bl	8000d3e <HAL_DAC_Start>
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
- 8002056:	f000 f98d 	bl	8002374 <MX_GPIO_Init>
+ 8002046:	f000 f995 	bl	8002374 <MX_GPIO_Init>
   MX_DAC1_Init();
- 800205a:	f000 f94d 	bl	80022f8 <MX_DAC1_Init>
+ 800204a:	f000 f955 	bl	80022f8 <MX_DAC1_Init>
+  /* USER CODE BEGIN 2 */
+
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
+ 800204e:	2100      	movs	r1, #0
+ 8002050:	487b      	ldr	r0, [pc, #492]	; (8002240 <main+0x208>)
+ 8002052:	f7fe fe74 	bl	8000d3e <HAL_DAC_Start>
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
+ 8002056:	2110      	movs	r1, #16
+ 8002058:	4879      	ldr	r0, [pc, #484]	; (8002240 <main+0x208>)
+ 800205a:	f7fe fe70 	bl	8000d3e <HAL_DAC_Start>
   uint32_t triangle;
   uint32_t sawtooth;
   uint32_t sine;
