@@ -90,7 +90,8 @@ int main(void)
   MX_ADC1_Init();
   MX_ADC3_Init();
   /* USER CODE BEGIN 2 */
-
+  uint32_t refVoltage;
+  uint32_t tempVoltage;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -100,6 +101,18 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	HAL_ADC_Start(&hadc1);
+	HAL_ADC_Start(&hadc3);
+
+	if(HAL_ADC_PollForConversion(&hadc1, 10000) == HAL_OK) {
+		refVoltage = HAL_ADC_GetValue(&hadc1);
+	}
+	if(HAL_ADC_PollForConversion(&hadc3, 10000) == HAL_OK) {
+		tempVoltage = HAL_ADC_GetValue(&hadc3);
+		// temporary, for test purposes
+		int32_t tempCelcius = __HAL_ADC_CALC_TEMPERATURE(3300, tempVoltage, ADC_RESOLUTION_12B);
+	}
+
   }
   /* USER CODE END 3 */
 }
