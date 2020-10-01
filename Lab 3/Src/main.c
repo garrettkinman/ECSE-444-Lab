@@ -90,9 +90,9 @@ int main(void)
   MX_ADC1_Init();
   MX_ADC3_Init();
   /* USER CODE BEGIN 2 */
-  uint32_t refVoltage;
-  uint32_t tempVoltage;
-  int32_t tempCelcius;
+  uint16_t refVoltage;
+  uint16_t tempVoltage;
+  float tempCelsius;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -102,16 +102,46 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	HAL_ADC_Start(&hadc1);
-	HAL_ADC_Start(&hadc3);
+	float VREF_Ratio;
 
+	HAL_ADC_Start(&hadc1);
 	if(HAL_ADC_PollForConversion(&hadc1, 10000) == HAL_OK) {
 		refVoltage = HAL_ADC_GetValue(&hadc1);
+		int32_t VREFINT_CAL = (int32_t) *((uint16_t*) (0x1FFF75AAUL));
+		VREF_Ratio = (float) VREFINT_CAL / ((float) refVoltage);
 	}
+
+	HAL_ADC_Start(&hadc3);
 	if(HAL_ADC_PollForConversion(&hadc3, 10000) == HAL_OK) {
 		tempVoltage = HAL_ADC_GetValue(&hadc3);
+
+		int32_t TS_CAL2 = (int32_t) *((uint16_t*) (0x1FFF75CAUL));
+		int32_t TS_CAL1 = (int32_t) *((uint16_t*) (0x1FFF75A8UL));
+
+		int32_t castedTempVoltage = (int32_t) tempVoltage;
+		int32_t diff = castedTempVoltage - TS_CAL1;
+		int32_t numerator = 110 - 30;
+		int32_t denominator = TS_CAL2 - TS_CAL1;
+		float scalar = ((float) numerator) / (VREF_Ratio * ((float) denominator));
+
+		// TODO: scale calibrated according to Vref
+		// tempCelsius = ((TS_CAL2_TEMP - TS_CAL1_TEMP) / (TS_CAL2 - TS_CAL1)) * (TS_DATA - TS_CAL1) + 30
+		tempCelsius = scalar * (diff) + 30;
+		/*
+		(((( ((int32_t)(((((((tempVoltage)))                                                                 \
+		  << ((((((0x00000000UL))))) >> (( 3UL) - 1UL)))   \
+		 >> (((0x00000000UL)) >> (( 3UL) - 1UL))      \
+		)         \
+		                 * ((refVoltage)))                                     \
+		                / (3000UL))                                     \
+		      - (int32_t) *((uint16_t*) (0x1FFF75A8UL)))                                         \
+		   ) * (int32_t)((110L) - (( int32_t)   30L))                    \
+		  ) / (int32_t)((int32_t)*((uint16_t*) (0x1FFF75CAUL)) - (int32_t)*((uint16_t*) (0x1FFF75A8UL))) \
+		 ) + (( int32_t)   30L)                                                        \
+		)
+		*/
 		// temporary, for test purposes
-		tempCelcius = __HAL_ADC_CALC_TEMPERATURE(refVoltage, tempVoltage, ADC_RESOLUTION_12B);
+		// tempCelsius = __HAL_ADC_CALC_TEMPERATURE(refVoltage, tempVoltage, ADC_RESOLUTION_12B);
 	}
 
   }
