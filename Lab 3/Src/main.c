@@ -90,8 +90,6 @@ int main(void)
   MX_ADC1_Init();
   MX_ADC3_Init();
   /* USER CODE BEGIN 2 */
-  uint16_t refVoltage;
-  uint16_t tempVoltage;
   float tempCelsius;
   /* USER CODE END 2 */
 
@@ -102,15 +100,20 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	float VREF_Ratio;
+	float VREF;
+	uint16_t refVoltage;
+	uint16_t tempVoltage;
 
+	// get VREF
 	HAL_ADC_Start(&hadc1);
 	if(HAL_ADC_PollForConversion(&hadc1, 10000) == HAL_OK) {
 		refVoltage = HAL_ADC_GetValue(&hadc1);
 		int32_t VREFINT_CAL = (int32_t) *((uint16_t*) (0x1FFF75AAUL));
-		VREF_Ratio = (float) VREFINT_CAL / ((float) refVoltage);
+		VREF = 3.0 * (float) VREFINT_CAL / ((float) refVoltage);
 	}
 
+	// get tempVoltage
+	// calculate temp in Celsious based on tempVoltage and VREF and calibrated values
 	HAL_ADC_Start(&hadc3);
 	if(HAL_ADC_PollForConversion(&hadc3, 10000) == HAL_OK) {
 		tempVoltage = HAL_ADC_GetValue(&hadc3);
@@ -122,26 +125,12 @@ int main(void)
 		int32_t diff = castedTempVoltage - TS_CAL1;
 		int32_t numerator = 110 - 30;
 		int32_t denominator = TS_CAL2 - TS_CAL1;
-		float scalar = ((float) numerator) / (VREF_Ratio * ((float) denominator));
 
-		// TODO: scale calibrated according to Vref
+		// in here, we are also scaling the TS_CAL2/1 according to VREF
+		float scalar = ((float) numerator) / (VREF * ((float) denominator));
+
 		// tempCelsius = ((TS_CAL2_TEMP - TS_CAL1_TEMP) / (TS_CAL2 - TS_CAL1)) * (TS_DATA - TS_CAL1) + 30
 		tempCelsius = scalar * (diff) + 30;
-		/*
-		(((( ((int32_t)(((((((tempVoltage)))                                                                 \
-		  << ((((((0x00000000UL))))) >> (( 3UL) - 1UL)))   \
-		 >> (((0x00000000UL)) >> (( 3UL) - 1UL))      \
-		)         \
-		                 * ((refVoltage)))                                     \
-		                / (3000UL))                                     \
-		      - (int32_t) *((uint16_t*) (0x1FFF75A8UL)))                                         \
-		   ) * (int32_t)((110L) - (( int32_t)   30L))                    \
-		  ) / (int32_t)((int32_t)*((uint16_t*) (0x1FFF75CAUL)) - (int32_t)*((uint16_t*) (0x1FFF75A8UL))) \
-		 ) + (( int32_t)   30L)                                                        \
-		)
-		*/
-		// temporary, for test purposes
-		// tempCelsius = __HAL_ADC_CALC_TEMPERATURE(refVoltage, tempVoltage, ADC_RESOLUTION_12B);
 	}
 
   }
@@ -260,7 +249,7 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_VREFINT;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_24CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_640CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -316,7 +305,7 @@ static void MX_ADC3_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_TEMPSENSOR;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_24CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_640CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
