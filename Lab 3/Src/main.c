@@ -92,6 +92,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   uint32_t refVoltage;
   uint32_t tempVoltage;
+  int32_t tempCelcius;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -110,7 +111,7 @@ int main(void)
 	if(HAL_ADC_PollForConversion(&hadc3, 10000) == HAL_OK) {
 		tempVoltage = HAL_ADC_GetValue(&hadc3);
 		// temporary, for test purposes
-		int32_t tempCelcius = __HAL_ADC_CALC_TEMPERATURE(3300, tempVoltage, ADC_RESOLUTION_12B);
+		tempCelcius = __HAL_ADC_CALC_TEMPERATURE(refVoltage, tempVoltage, ADC_RESOLUTION_12B);
 	}
 
   }
