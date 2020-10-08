@@ -28,7 +28,8 @@ Src/main.o: ../Src/main.c ../Inc/main.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h \
- ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h
+ ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
+ ../Inc/arm_math.h ../Drivers/CMSIS/Include/cmsis_compiler.h
 
 ../Inc/main.h:
 
@@ -91,3 +92,7 @@ Src/main.o: ../Src/main.c ../Inc/main.h \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h:
 
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
+
+../Inc/arm_math.h:
+
+../Drivers/CMSIS/Include/cmsis_compiler.h:

@@ -22,6 +22,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#define ARM_MATH_CM4
+#include "arm_math.h"
 
 /* USER CODE END Includes */
 
@@ -46,6 +48,10 @@ TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
 
+// declare index for sine wave and array to hold 1 period of samples for sine wave
+// with 40 samples and 80 kHz sampling frequency, sine wave will have frequency of 2 kHz
+uint32_t sine_i = 0;
+uint32_t sine[40];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -93,6 +99,17 @@ int main(void)
   MX_DAC1_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+
+  // initialize one period of sine wave
+  for (uint32_t i = 0; i < 40; i++) {
+	  float radians = 3.14 * i / 20.0;
+	  sine[i] = (uint32_t) roundf(1365.0 * (1.0 + arm_sin_f32(radians)));
+  }
+
+  // start the DAC and timer
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
+  HAL_TIM_Base_Start_IT(&htim2);
+
 
   /* USER CODE END 2 */
 
@@ -284,6 +301,15 @@ static void MX_GPIO_Init(void)
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+}
+
+/**
+ * @brief	Interrupt handler for TIM2; TODO.
+ * @retval	None
+ */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine[sine_i]);
+	sine_i = (sine_i + 1) % 40;
 }
 /* USER CODE END 4 */
 
