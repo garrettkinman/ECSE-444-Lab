@@ -49,10 +49,19 @@ TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
 
-// declare index for sine wave and array to hold 1 period of samples for sine wave
-// with 40 samples and 80 kHz sampling frequency, sine wave will have frequency of 2 kHz
-uint32_t sine_i = 0;
-uint32_t sine[40];
+// declare index for sine waves and arrays to hold 1 period of samples for sine waves
+// three frequencies: 1 kHz, 2 kHz, and 4 kHz
+uint32_t sine_2kHz_i = 0;
+uint32_t sine_4kHz[20];
+uint32_t sine_2kHz[40];
+uint32_t sine_1kHz[80];
+
+// declare index for array of pointers to sine wave arrays above
+// used for cycling through frequencies at button push
+uint32_t sines_i = 0;
+uint32_t *sines[3];
+uint32_t sines_lens[3] = {80, 40, 20};
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -103,15 +112,28 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
-  // initialize one period of sine wave
+  // initialize one period of sine waves
+  for (uint32_t i = 0; i < 80; i++) {
+	  float radians = 3.14 * i / 40.0;
+	  sine_1kHz[i] = (uint32_t) roundf(1365.0 * (1.0 + arm_sin_f32(radians)));
+  }
   for (uint32_t i = 0; i < 40; i++) {
 	  float radians = 3.14 * i / 20.0;
-	  sine[i] = (uint32_t) roundf(1365.0 * (1.0 + arm_sin_f32(radians)));
+	  sine_2kHz[i] = (uint32_t) roundf(1365.0 * (1.0 + arm_sin_f32(radians)));
   }
+  for (uint32_t i = 0; i < 20; i++) {
+	  float radians = 3.14 * i / 10.0;
+	  sine_4kHz[i] = (uint32_t) roundf(1365.0 * (1.0 + arm_sin_f32(radians)));
+  }
+
+  // initialize array of pointers to sine waves
+  sines[0] = sine_1kHz;
+  sines[1] = sine_2kHz;
+  sines[2] = sine_4kHz;
 
   // start the DAC and timer
 //  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
-  HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1, sine, 40, DAC_ALIGN_12B_R);
+  HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1, sine_2kHz, 40, DAC_ALIGN_12B_R);
   HAL_TIM_Base_Start_IT(&htim2);
 
 
@@ -316,11 +338,16 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 /**
- * @brief	Interrupt handler for GPIO; toggles LED.
+ * @brief	Interrupt handler for GPIO; toggles LED, iterates through frequencies.
  * @retval	None
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+
+	// stop last DMA, start new one, update index
+	HAL_DAC_Stop_DMA(&hdac1, DAC_CHANNEL_1);
+	HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1, sines[sines_i], sines_lens[sines_i], DAC_ALIGN_12B_R);
+	sines_i = (sines_i + 1) % 3;
 }
 
 /**
