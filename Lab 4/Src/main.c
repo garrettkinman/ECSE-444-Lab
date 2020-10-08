@@ -132,8 +132,8 @@ int main(void)
   sines[2] = sine_4kHz;
 
   // start the DAC and timer
-//  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
-  HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1, sine_2kHz, 40, DAC_ALIGN_12B_R);
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
+//  HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1, sine_2kHz, 40, DAC_ALIGN_12B_R);
   HAL_TIM_Base_Start_IT(&htim2);
 
 
@@ -351,13 +351,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 }
 
 /**
- * @brief	Interrupt handler for TIM2; TODO.
+ * @brief	Interrupt handler for TIM2; plays 2 kHz sound.
  * @retval	None
  */
 //void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-//	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine[sine_i]);
-//	sine_i = (sine_i + 1) % 40;
+//	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine_2kHz[sine_2kHz_i]);
+//	sine_2kHz_i = (sine_2kHz_i + 1) % 40;
 //}
+
 /* USER CODE END 4 */
 
 /**
