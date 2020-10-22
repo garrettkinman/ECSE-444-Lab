@@ -22,7 +22,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "stm32l475e_iot01_qspi.h"
 
+#define ARM_MATH_CM4
+#include "arm_math.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,7 +51,8 @@ QSPI_HandleTypeDef hqspi;
 TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
-
+uint8_t original[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+uint8_t copy[10];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -100,6 +104,18 @@ int main(void)
   MX_TIM2_Init();
   MX_QUADSPI_Init();
   /* USER CODE BEGIN 2 */
+  BSP_QSPI_Init();
+
+
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+
+  // test
+  if (BSP_QSPI_Erase_Block((uint32_t) 0x08080000) != QSPI_OK)
+	  Error_Handler();
+  if (BSP_QSPI_Write(original, (uint32_t) 0x08080000, sizeof(original)) != QSPI_OK)
+	  Error_Handler();
+  if (BSP_QSPI_Read(copy, (uint32_t) 0x08080000, sizeof(original)) != QSPI_OK)
+	  Error_Handler();
 
   /* USER CODE END 2 */
 
@@ -257,7 +273,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 1000;
+  htim2.Init.Period = 1815;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -343,6 +359,8 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
 
+	HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+	__BKPT();
   /* USER CODE END Error_Handler_Debug */
 }
 
