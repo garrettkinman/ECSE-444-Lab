@@ -57,6 +57,7 @@ osThreadId readSensorsTaskHandle;
 /* USER CODE BEGIN PV */
 
 // mode for which sensor data gets printed to terminal
+uint8_t buttonPressed = 0;
 uint8_t mode = 0;
 
 // hold sensor outputs
@@ -65,9 +66,6 @@ float gyro[3];
 int16_t magneto[3];
 float hsensor;
 char str[100];
-
-// UART status
-HAL_StatusTypeDef UART_status;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -119,11 +117,7 @@ int main(void)
   MX_I2C2_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  BSP_ACCELERO_Init();
-  BSP_GYRO_Init();
-  BSP_MAGNETO_Init();
-  BSP_HSENSOR_Init();
-  HAL_UART_Init(&huart1);
+
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -361,7 +355,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
-	mode = (mode + 1) % 4;
+	buttonPressed = 1;
 }
 /* USER CODE END 4 */
 
@@ -379,11 +373,32 @@ void StartChangeModeTask(void const * argument)
   for(;;)
   {
     osDelay(100);
-	// poll sensors at 10 Hz
-	BSP_ACCELERO_AccGetXYZ(accelero);
-	BSP_GYRO_GetXYZ(gyro);
-	BSP_MAGNETO_GetXYZ(magneto);
-	hsensor = BSP_HSENSOR_ReadHumidity();
+    if (buttonPressed) {
+    	buttonPressed = 0;
+    	mode = (mode + 1) % 4;
+    }
+  }
+  /* USER CODE END 5 */
+}
+
+/* USER CODE BEGIN Header_StartTransmitTask */
+/**
+* @brief Function implementing the transmitTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTransmitTask */
+void StartTransmitTask(void const * argument)
+{
+  /* USER CODE BEGIN StartTransmitTask */
+
+  // UART status
+  HAL_StatusTypeDef UART_status;
+  HAL_UART_Init(&huart1);
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(100);
 	switch(mode) {
 	case 0:
 		// accelerometer
@@ -406,24 +421,6 @@ void StartChangeModeTask(void const * argument)
 	if (UART_status != HAL_OK)
 		HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
   }
-  /* USER CODE END 5 */
-}
-
-/* USER CODE BEGIN Header_StartTransmitTask */
-/**
-* @brief Function implementing the transmitTask thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartTransmitTask */
-void StartTransmitTask(void const * argument)
-{
-  /* USER CODE BEGIN StartTransmitTask */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
   /* USER CODE END StartTransmitTask */
 }
 
@@ -437,10 +434,19 @@ void StartTransmitTask(void const * argument)
 void StartReadSensorsTask(void const * argument)
 {
   /* USER CODE BEGIN StartReadSensorsTask */
+  BSP_ACCELERO_Init();
+  BSP_GYRO_Init();
+  BSP_MAGNETO_Init();
+  BSP_HSENSOR_Init();
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    osDelay(100);
+	// poll sensors at 10 Hz
+	BSP_ACCELERO_AccGetXYZ(accelero);
+	BSP_GYRO_GetXYZ(gyro);
+	BSP_MAGNETO_GetXYZ(magneto);
+	hsensor = BSP_HSENSOR_ReadHumidity();
   }
   /* USER CODE END StartReadSensorsTask */
 }
