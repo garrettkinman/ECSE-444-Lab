@@ -22,7 +22,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "stm32l475e_iot01_accelero.h"
+#include "stm32l475e_iot01_gyro.h"
+#include "stm32l475e_iot01_magneto.h"
+#include "stm32l475e_iot01_hsensor.h"
 
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -97,12 +102,14 @@ int main(void)
   BSP_GYRO_Init();
   BSP_MAGNETO_Init();
   BSP_HSENSOR_Init();
+  HAL_UART_Init(&huart1);
 
   // hold sensor outputs
   int16_t accelero[3];
   float gyro[3];
   int16_t magneto[3];
   float hsensor;
+  char str[100];
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -118,6 +125,8 @@ int main(void)
 	BSP_GYRO_GetXYZ(gyro);
 	BSP_MAGNETO_GetXYZ(magneto);
 	hsensor = BSP_HSENSOR_ReadHumidity();
+	sprintf(str, "Humidity: %.2d", (int) hsensor);
+	HAL_UART_Transmit(&huart1, (uint8_t*) str, strlen(str), 1000);
 	HAL_Delay(100);
   }
   /* USER CODE END 3 */
