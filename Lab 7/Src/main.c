@@ -126,7 +126,7 @@ int main(void)
 	BSP_MAGNETO_GetXYZ(magneto);
 	hsensor = BSP_HSENSOR_ReadHumidity();
 	sprintf(str, "Humidity: %.2d", (int) hsensor);
-	HAL_UART_Transmit(&huart1, (uint8_t*) str, strlen(str), 1000);
+	HAL_UART_Transmit(&huart1, (uint8_t*) str, (uint16_t) strlen(str), 1000);
 	HAL_Delay(100);
   }
   /* USER CODE END 3 */
