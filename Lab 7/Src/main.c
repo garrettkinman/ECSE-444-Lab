@@ -53,8 +53,19 @@ UART_HandleTypeDef huart1;
 
 osThreadId defaultTaskHandle;
 /* USER CODE BEGIN PV */
+
 // mode for which sensor data gets printed to terminal
 uint8_t mode = 0;
+
+// hold sensor outputs
+int16_t accelero[3];
+float gyro[3];
+int16_t magneto[3];
+float hsensor;
+char str[100];
+
+// UART status
+HAL_StatusTypeDef UART_status;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -147,7 +158,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }
@@ -353,13 +363,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN 5 */
-  // hold sensor outputs
-  int16_t accelero[3];
-  float gyro[3];
-  int16_t magneto[3];
-  float hsensor;
-  char str[100];
-  HAL_StatusTypeDef UART_status;
   /* Infinite loop */
   for(;;)
   {
