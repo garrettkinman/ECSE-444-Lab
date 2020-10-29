@@ -109,14 +109,6 @@ int main(void)
   BSP_MAGNETO_Init();
   BSP_HSENSOR_Init();
   HAL_UART_Init(&huart1);
-
-  // hold sensor outputs
-  int16_t accelero[3];
-  float gyro[3];
-  int16_t magneto[3];
-  float hsensor;
-  char str[100];
-  HAL_StatusTypeDef UART_status;
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -155,33 +147,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-	// poll sensors at 10 Hz
-	BSP_ACCELERO_AccGetXYZ(accelero);
-	BSP_GYRO_GetXYZ(gyro);
-	BSP_MAGNETO_GetXYZ(magneto);
-	hsensor = BSP_HSENSOR_ReadHumidity();
-	switch(mode) {
-	case 0:
-		// accelerometer
-		sprintf(str, "Acceleration X, Y, Z: %.2d, %.2d, %.2d", (int) accelero[0], (int) accelero[1], (int) accelero[2]);
-		break;
-	case 1:
-		// gyroscope
-		sprintf(str, "Gyro X, Y, Z: %.2d, %.2d, %.2d", (int) gyro[0], (int) gyro[1], (int) gyro[2]);
-		break;
-	case 2:
-		// magnetometer
-		sprintf(str, "Magnetic X, Y, Z: %.2d, %.2d, %.2d", (int) magneto[0], (int) magneto[1], (int) magneto[2]);
-		break;
-	case 3:
-		// humidity sensor
-		sprintf(str, "Humidity: %.2d", (int) hsensor);
-		break;
-	}
-	UART_status = HAL_UART_Transmit(&huart1, (uint8_t*) str, (uint16_t) strlen(str), 10000);
-	if (UART_status != HAL_OK)
-		HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 	HAL_Delay(100);
   }
   /* USER CODE END 3 */
@@ -388,10 +353,43 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN 5 */
+  // hold sensor outputs
+  int16_t accelero[3];
+  float gyro[3];
+  int16_t magneto[3];
+  float hsensor;
+  char str[100];
+  HAL_StatusTypeDef UART_status;
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    osDelay(100);
+	// poll sensors at 10 Hz
+	BSP_ACCELERO_AccGetXYZ(accelero);
+	BSP_GYRO_GetXYZ(gyro);
+	BSP_MAGNETO_GetXYZ(magneto);
+	hsensor = BSP_HSENSOR_ReadHumidity();
+	switch(mode) {
+	case 0:
+		// accelerometer
+		sprintf(str, "Acceleration X, Y, Z: %.2d, %.2d, %.2d", (int) accelero[0], (int) accelero[1], (int) accelero[2]);
+		break;
+	case 1:
+		// gyroscope
+		sprintf(str, "Gyro X, Y, Z: %.2d, %.2d, %.2d", (int) gyro[0], (int) gyro[1], (int) gyro[2]);
+		break;
+	case 2:
+		// magnetometer
+		sprintf(str, "Magnetic X, Y, Z: %.2d, %.2d, %.2d", (int) magneto[0], (int) magneto[1], (int) magneto[2]);
+		break;
+	case 3:
+		// humidity sensor
+		sprintf(str, "Humidity: %.2d", (int) hsensor);
+		break;
+	}
+	UART_status = HAL_UART_Transmit(&huart1, (uint8_t*) str, (uint16_t) strlen(str), 10000);
+	if (UART_status != HAL_OK)
+		HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
   }
   /* USER CODE END 5 */
 }
