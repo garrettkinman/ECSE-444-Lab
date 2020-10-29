@@ -51,7 +51,9 @@ I2C_HandleTypeDef hi2c2;
 
 UART_HandleTypeDef huart1;
 
-osThreadId defaultTaskHandle;
+osThreadId changeModeTaskHandle;
+osThreadId transmitTaskHandle;
+osThreadId readSensorsTaskHandle;
 /* USER CODE BEGIN PV */
 
 // mode for which sensor data gets printed to terminal
@@ -73,7 +75,9 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C2_Init(void);
 static void MX_USART1_UART_Init(void);
-void StartDefaultTask(void const * argument);
+void StartChangeModeTask(void const * argument);
+void StartTransmitTask(void const * argument);
+void StartReadSensorsTask(void const * argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -139,9 +143,17 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
-  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+  /* definition and creation of changeModeTask */
+  osThreadDef(changeModeTask, StartChangeModeTask, osPriorityNormal, 0, 128);
+  changeModeTaskHandle = osThreadCreate(osThread(changeModeTask), NULL);
+
+  /* definition and creation of transmitTask */
+  osThreadDef(transmitTask, StartTransmitTask, osPriorityIdle, 0, 128);
+  transmitTaskHandle = osThreadCreate(osThread(transmitTask), NULL);
+
+  /* definition and creation of readSensorsTask */
+  osThreadDef(readSensorsTask, StartReadSensorsTask, osPriorityIdle, 0, 128);
+  readSensorsTaskHandle = osThreadCreate(osThread(readSensorsTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -353,14 +365,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 }
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_StartDefaultTask */
+/* USER CODE BEGIN Header_StartChangeModeTask */
 /**
-  * @brief  Function implementing the defaultTask thread.
+  * @brief  Function implementing the changeModeTask thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void const * argument)
+/* USER CODE END Header_StartChangeModeTask */
+void StartChangeModeTask(void const * argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
@@ -395,6 +407,42 @@ void StartDefaultTask(void const * argument)
 		HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
   }
   /* USER CODE END 5 */
+}
+
+/* USER CODE BEGIN Header_StartTransmitTask */
+/**
+* @brief Function implementing the transmitTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTransmitTask */
+void StartTransmitTask(void const * argument)
+{
+  /* USER CODE BEGIN StartTransmitTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartTransmitTask */
+}
+
+/* USER CODE BEGIN Header_StartReadSensorsTask */
+/**
+* @brief Function implementing the readSensorsTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartReadSensorsTask */
+void StartReadSensorsTask(void const * argument)
+{
+  /* USER CODE BEGIN StartReadSensorsTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartReadSensorsTask */
 }
 
 /**
