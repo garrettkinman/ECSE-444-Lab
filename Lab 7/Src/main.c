@@ -39,6 +39,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define ITM_Port32(n) (*((volatile unsigned long *) (0xE0000000+4*n)))
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -142,11 +143,11 @@ int main(void)
   changeModeTaskHandle = osThreadCreate(osThread(changeModeTask), NULL);
 
   /* definition and creation of transmitTask */
-  osThreadDef(transmitTask, StartTransmitTask, osPriorityIdle, 0, 128);
+  osThreadDef(transmitTask, StartTransmitTask, osPriorityNormal, 0, 128);
   transmitTaskHandle = osThreadCreate(osThread(transmitTask), NULL);
 
   /* definition and creation of readSensorsTask */
-  osThreadDef(readSensorsTask, StartReadSensorsTask, osPriorityIdle, 0, 128);
+  osThreadDef(readSensorsTask, StartReadSensorsTask, osPriorityNormal, 0, 128);
   readSensorsTaskHandle = osThreadCreate(osThread(readSensorsTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -373,6 +374,7 @@ void StartChangeModeTask(void const * argument)
   for(;;)
   {
     osDelay(100);
+    ITM_Port32(31) = 1;
     if (buttonPressed) {
     	buttonPressed = 0;
     	mode = (mode + 1) % 4;
@@ -399,6 +401,7 @@ void StartTransmitTask(void const * argument)
   for(;;)
   {
     osDelay(100);
+    ITM_Port32(31) = 2;
 	switch(mode) {
 	case 0:
 		// accelerometer
@@ -442,6 +445,7 @@ void StartReadSensorsTask(void const * argument)
   for(;;)
   {
     osDelay(100);
+    ITM_Port32(31) = 3;
 	// poll sensors at 10 Hz
 	BSP_ACCELERO_AccGetXYZ(accelero);
 	BSP_GYRO_GetXYZ(gyro);
