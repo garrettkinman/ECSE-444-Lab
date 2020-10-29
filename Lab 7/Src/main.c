@@ -19,6 +19,10 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "stm32l475e_iot01_accelero.h"
+#include "stm32l475e_iot01_gyro.h"
+#include "stm32l475e_iot01_magneto.h"
+#include "stm32l475e_iot01_hsensor.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -93,7 +97,16 @@ int main(void)
   MX_I2C2_Init();
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
+  BSP_ACCELERO_Init();
+  BSP_GYRO_Init();
+  BSP_MAGNETO_Init();
+  BSP_HSENSOR_Init();
 
+  // hold sensor outputs
+  int16_t accelero[3];
+  float gyro[3];
+  int16_t magneto[3];
+  float hsensor;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -103,6 +116,13 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+	// poll sensors at 10 Hz
+	BSP_ACCELERO_AccGetXYZ(accelero);
+	BSP_GYRO_GetXYZ(gyro);
+	BSP_MAGNETO_GetXYZ(magneto);
+	hsensor = BSP_HSENSOR_ReadHumidity();
+	HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }
