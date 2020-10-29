@@ -26,8 +26,8 @@ extern "C" {
 #endif
   
 /* Includes ------------------------------------------------------------------*/
-#include "../Common/hsensor.h"
-#include "../Common/tsensor.h"  
+#include "hsensor.h"
+#include "tsensor.h"
 
 /** @addtogroup BSP
   * @{
