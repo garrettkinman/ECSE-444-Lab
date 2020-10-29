@@ -28,6 +28,7 @@
 #include "stm32l475e_iot01_hsensor.h"
 
 #include <stdio.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,7 +51,8 @@ I2C_HandleTypeDef hi2c2;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-
+// mode for which sensor data gets printed to terminal
+uint8_t mode = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -110,6 +112,7 @@ int main(void)
   int16_t magneto[3];
   float hsensor;
   char str[100];
+  HAL_StatusTypeDef UART_status;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -125,8 +128,27 @@ int main(void)
 	BSP_GYRO_GetXYZ(gyro);
 	BSP_MAGNETO_GetXYZ(magneto);
 	hsensor = BSP_HSENSOR_ReadHumidity();
-	sprintf(str, "Humidity: %.2d", (int) hsensor);
-	HAL_UART_Transmit(&huart1, (uint8_t*) str, (uint16_t) strlen(str), 1000);
+	switch(mode) {
+	case 0:
+		// accelerometer
+		sprintf(str, "Acceleration X, Y, Z: %.2d, %.2d, %.2d", (int) accelero[0], (int) accelero[1], (int) accelero[2]);
+		break;
+	case 1:
+		// gyroscope
+		sprintf(str, "Gyro X, Y, Z: %.2d, %.2d, %.2d", (int) gyro[0], (int) gyro[1], (int) gyro[2]);
+		break;
+	case 2:
+		// magnetometer
+		sprintf(str, "Magnetic X, Y, Z: %.2d, %.2d, %.2d", (int) magneto[0], (int) magneto[1], (int) magneto[2]);
+		break;
+	case 3:
+		// humidity sensor
+		sprintf(str, "Humidity: %.2d", (int) hsensor);
+		break;
+	}
+	UART_status = HAL_UART_Transmit(&huart1, (uint8_t*) str, (uint16_t) strlen(str), 10000);
+	if (UART_status != HAL_OK)
+		HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 	HAL_Delay(100);
   }
   /* USER CODE END 3 */
@@ -313,7 +335,10 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+	mode = (mode + 1) % 4;
+}
 /* USER CODE END 4 */
 
 /**
