@@ -16411,7 +16411,7 @@ void StartTransmitTask(void const * argument)
  8005f18:	08005f9b 	.word	0x08005f9b
 	case 0:
 		// accelerometer
-		sprintf(str, "Acceleration X, Y, Z: %.2d, %.2d, %.2d", (int) accelero[0], (int) accelero[1], (int) accelero[2]);
+		sprintf(str, "Acceleration X, Y, Z: %.2d, %.2d, %.2d\n", (int) accelero[0], (int) accelero[1], (int) accelero[2]);
  8005f1c:	4b32      	ldr	r3, [pc, #200]	; (8005fe8 <StartTransmitTask+0x104>)
  8005f1e:	f9b3 3000 	ldrsh.w	r3, [r3]
  8005f22:	461a      	mov	r2, r3
@@ -16429,7 +16429,7 @@ void StartTransmitTask(void const * argument)
  8005f3e:	e038      	b.n	8005fb2 <StartTransmitTask+0xce>
 	case 1:
 		// gyroscope
-		sprintf(str, "Gyro X, Y, Z: %.2d, %.2d, %.2d", (int) gyro[0], (int) gyro[1], (int) gyro[2]);
+		sprintf(str, "Gyro X, Y, Z: %.2d, %.2d, %.2d\n", (int) gyro[0], (int) gyro[1], (int) gyro[2]);
  8005f40:	4b2c      	ldr	r3, [pc, #176]	; (8005ff4 <StartTransmitTask+0x110>)
  8005f42:	edd3 7a00 	vldr	s15, [r3]
  8005f46:	eebd 7ae7 	vcvt.s32.f32	s14, s15
@@ -16450,7 +16450,7 @@ void StartTransmitTask(void const * argument)
  8005f74:	e01d      	b.n	8005fb2 <StartTransmitTask+0xce>
 	case 2:
 		// magnetometer
-		sprintf(str, "Magnetic X, Y, Z: %.2d, %.2d, %.2d", (int) magneto[0], (int) magneto[1], (int) magneto[2]);
+		sprintf(str, "Magnetic X, Y, Z: %.2d, %.2d, %.2d\n", (int) magneto[0], (int) magneto[1], (int) magneto[2]);
  8005f76:	4b21      	ldr	r3, [pc, #132]	; (8005ffc <StartTransmitTask+0x118>)
  8005f78:	f9b3 3000 	ldrsh.w	r3, [r3]
  8005f7c:	461a      	mov	r2, r3
@@ -16468,7 +16468,7 @@ void StartTransmitTask(void const * argument)
  8005f98:	e00b      	b.n	8005fb2 <StartTransmitTask+0xce>
 	case 3:
 		// humidity sensor
-		sprintf(str, "Humidity: %.2d", (int) hsensor);
+		sprintf(str, "Humidity: %.2d\n", (int) hsensor);
  8005f9a:	4b1a      	ldr	r3, [pc, #104]	; (8006004 <StartTransmitTask+0x120>)
  8005f9c:	edd3 7a00 	vldr	s15, [r3]
  8005fa0:	eefd 7ae7 	vcvt.s32.f32	s15, s15

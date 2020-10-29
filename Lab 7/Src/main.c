@@ -405,19 +405,19 @@ void StartTransmitTask(void const * argument)
 	switch(mode) {
 	case 0:
 		// accelerometer
-		sprintf(str, "Acceleration X, Y, Z: %.2d, %.2d, %.2d", (int) accelero[0], (int) accelero[1], (int) accelero[2]);
+		sprintf(str, "Acceleration X, Y, Z: %.2d, %.2d, %.2d\n", (int) accelero[0], (int) accelero[1], (int) accelero[2]);
 		break;
 	case 1:
 		// gyroscope
-		sprintf(str, "Gyro X, Y, Z: %.2d, %.2d, %.2d", (int) gyro[0], (int) gyro[1], (int) gyro[2]);
+		sprintf(str, "Gyro X, Y, Z: %.2d, %.2d, %.2d\n", (int) gyro[0], (int) gyro[1], (int) gyro[2]);
 		break;
 	case 2:
 		// magnetometer
-		sprintf(str, "Magnetic X, Y, Z: %.2d, %.2d, %.2d", (int) magneto[0], (int) magneto[1], (int) magneto[2]);
+		sprintf(str, "Magnetic X, Y, Z: %.2d, %.2d, %.2d\n", (int) magneto[0], (int) magneto[1], (int) magneto[2]);
 		break;
 	case 3:
 		// humidity sensor
-		sprintf(str, "Humidity: %.2d", (int) hsensor);
+		sprintf(str, "Humidity: %.2d\n", (int) hsensor);
 		break;
 	}
 	UART_status = HAL_UART_Transmit(&huart1, (uint8_t*) str, (uint16_t) strlen(str), 10000);

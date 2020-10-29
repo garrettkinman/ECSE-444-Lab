@@ -5722,9 +5722,8 @@ LOAD c:/st/stm32cubeide_1.4.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  *(.rodata)
  .rodata        0x00000000080071e0        0x5 Middlewares/Third_Party/FreeRTOS/Source/tasks.o
  *fill*         0x00000000080071e5        0x3 
- .rodata        0x00000000080071e8       0xff Src/main.o
+ .rodata        0x00000000080071e8      0x100 Src/main.o
  *(.rodata*)
- *fill*         0x00000000080072e7        0x1 
  .rodata.AHBPrescTable
                 0x00000000080072e8       0x10 Src/system_stm32l4xx.o
                 0x00000000080072e8                AHBPrescTable
